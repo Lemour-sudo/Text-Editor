@@ -9,7 +9,7 @@ import java.util.LinkedList;
 public class DictionaryLL implements Dictionary 
 {
 
-	private LinkedList<String> dict;
+	private LinkedList<String> dict = new LinkedList<String>();
 	
     // TODO: Add a constructor
 
@@ -21,7 +21,16 @@ public class DictionaryLL implements Dictionary
      * (it wasn't already there). */
     public boolean addWord(String word) {
     	// TODO: Implement this method
-        return false;
+    	
+    	word = word.toLowerCase();
+    	
+    	if(this.dict.contains(word)) {
+    		return false;
+    	}
+    	    	
+    	this.dict.add(word);
+    	
+        return true;
     }
 
 
@@ -29,12 +38,17 @@ public class DictionaryLL implements Dictionary
     public int size()
     {
         // TODO: Implement this method
-        return 0;
+        return this.dict.size();
     }
 
     /** Is this a word according to this dictionary? */
     public boolean isWord(String s) {
         //TODO: Implement this method
+    	
+    	if(this.dict.contains(s.toLowerCase())) {
+    		return true;
+    	}
+    	
         return false;
     }
 

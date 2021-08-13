@@ -8,7 +8,7 @@ import java.util.TreeSet;
  */
 public class DictionaryBST implements Dictionary 
 {
-   private TreeSet<String> dict;
+   private TreeSet<String> dict = new TreeSet<String>();
 	
     // TODO: Implement the dictionary interface using a TreeSet.  
  	// You'll need a constructor here
@@ -19,22 +19,31 @@ public class DictionaryBST implements Dictionary
      * @param word The word to add
      * @return true if the word was added to the dictionary 
      * (it wasn't already there). */
-    public boolean addWord(String word) {
-    	// TODO: Implement this method
-        return false;
+    public boolean addWord(String word) {    	
+    	word = word.toLowerCase();
+    	
+    	if(isWord(word)) {
+    		return false;
+    	}
+    	
+    	this.dict.add(word);
+    	
+        return true;
     }
 
 
     /** Return the number of words in the dictionary */
     public int size()
     {
-    	// TODO: Implement this method
-        return 0;
+        return this.dict.size();
     }
 
     /** Is this a word according to this dictionary? */
     public boolean isWord(String s) {
-    	//TODO: Implement this method
+    	if(this.dict.contains(s.toLowerCase())) {
+    		return true;
+    	}
+    	
         return false;
     }
 

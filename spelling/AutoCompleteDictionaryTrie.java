@@ -1,9 +1,6 @@
 package spelling;
 
 import java.util.List;
-import java.util.Set;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
 
 /** 
@@ -20,6 +17,7 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
     public AutoCompleteDictionaryTrie()
 	{
 		root = new TrieNode();
+		this.size = 0;
 	}
 	
 	
@@ -39,8 +37,28 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	 */
 	public boolean addWord(String word)
 	{
-	    //TODO: Implement this method.
-	    return false;
+	    word = word.toLowerCase();
+		
+	    TrieNode node = this.root;
+		for(char c : word.toCharArray()) {
+			TrieNode child = node.getChild(c);
+			
+			if(child == null) {
+				node = node.insert(c);
+				continue;
+			}
+			
+			node = child;
+		}
+		
+		if(node.endsWord()) {
+			return false;
+		}
+		
+		node.setEndsWord(true);
+		this.size += 1;
+		
+	    return true;
 	}
 	
 	/** 
@@ -50,7 +68,7 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public int size()
 	{
 	    //TODO: Implement this method
-	    return 0;
+	    return this.size;
 	}
 	
 	
@@ -59,8 +77,24 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	@Override
 	public boolean isWord(String s) 
 	{
-	    // TODO: Implement this method
-		return false;
+		s = s.toLowerCase();
+		
+	    TrieNode node = this.root;
+		for(char c : s.toCharArray()) {
+			TrieNode child = node.getChild(c);
+			
+			if(child == null) {
+				return false;
+			}
+			
+			node = child;
+		}
+		
+		if(!node.endsWord()) {
+			return false;
+		}
+				
+		return true;
 	}
 
 	/** 
@@ -101,7 +135,45 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
     	 //       Add all of its child nodes to the back of the queue
     	 // Return the list of completions
     	 
-         return null;
+    	 LinkedList<String> completions = new LinkedList<String>();
+    	 LinkedList<TrieNode> queue = new LinkedList<TrieNode>();
+    	     	 
+    	 // Find the stem
+    	 TrieNode stem = this.root;
+    	 for(char c : prefix.toCharArray()) {
+    		 TrieNode child = stem.getChild(c);
+    		 
+    		 if(child == null) {
+    			 return completions;
+    		 }
+    		 
+    		 stem = child;
+    	 }
+    	 
+    	 // Generate completion through breadth first search
+    	 TrieNode node = stem;
+    	 while(completions.size() < numCompletions) {
+    		// Add node's text if it is a word
+    		 if(node.endsWord()) {
+    			 completions.add(node.getText());
+    		 }
+    		 
+    		 // Add current node's children to queue
+    		 for(char c : node.getValidNextCharacters()) {
+    			 TrieNode child = node.getChild(c); 
+    			 queue.addLast(child);
+    		 }
+    		 
+    		// Break out of loop if queue is empty 
+    		 if(queue.isEmpty()) {
+    			 break;
+    		 }
+    		 
+    		 // Set new current node
+    		 node = queue.removeFirst();
+    	 }
+    	 
+         return completions;
      }
 
  	// For debugging
