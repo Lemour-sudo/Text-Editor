@@ -53,7 +53,6 @@ public class MyLinkedListTester {
 	@Test
 	public void testGet()
 	{
-		System.out.println("Just started");
 		//test empty list, get should throw an exception
 		try {
 			emptyList.get(0);

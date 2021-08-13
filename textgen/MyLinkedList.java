@@ -17,6 +17,14 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	/** Create a new empty LinkedList */
 	public MyLinkedList() {
 		// TODO: Implement this method
+
+		this.head = new LLNode<E>(null);
+		this.tail = new LLNode<E>(null);
+
+		this.head.next = this.tail;
+		this.tail.prev = this.head;
+
+		this.size = 0;
 	}
 
 	/**
@@ -26,15 +34,42 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public boolean add(E element ) 
 	{
 		// TODO: Implement this method
+
+		// LLNode<E> newNode = new LLNode<E>(element);
+		LLNode<E> newNode = new LLNode<E>(element);
+		LLNode<E> lastNode = this.tail.prev;
+
+		lastNode.next = newNode;
+		newNode.prev = lastNode;
+		newNode.next = this.tail;
+		this.tail.prev = newNode;
+
+		this.size += 1;
+
 		return false;
 	}
 
 	/** Get the element at position index 
 	 * @throws IndexOutOfBoundsException if the index is out of bounds. */
-	public E get(int index) 
+	public E get(int index)
 	{
 		// TODO: Implement this method.
-		return null;
+
+		if((index < 0) || index >= this.size) {
+			throw new IndexOutOfBoundsException();
+		}
+
+		if(this.size == 0) {
+			throw new IndexOutOfBoundsException();
+		}
+
+		LLNode<E> currNode = this.head.next;
+
+		for(int i = 0; i < index; i++) {
+			currNode = currNode.next;
+		}
+
+		return currNode.data;
 	}
 
 	/**
@@ -52,7 +87,7 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public int size() 
 	{
 		// TODO: Implement this method
-		return -1;
+		return this.size;
 	}
 
 	/** Remove a node at the specified index and return its data element.
@@ -64,7 +99,29 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public E remove(int index) 
 	{
 		// TODO: Implement this method
-		return null;
+
+		if((index < 0) || index >= this.size) {
+			throw new IndexOutOfBoundsException();
+		}
+
+		if(this.size == 0) {
+			throw new IndexOutOfBoundsException();
+		}
+
+		LLNode<E> currNode = this.head.next;
+
+		for(int i = 0; i < index; i++) {
+			currNode = currNode.next;
+		}
+
+		LLNode<E> prevNode = currNode.prev;
+		LLNode<E> nextNode = currNode.next;
+
+		prevNode.next = nextNode;
+		nextNode.prev = prevNode;
+		this.size -= 1;
+
+		return currNode.data;
 	}
 
 	/**
